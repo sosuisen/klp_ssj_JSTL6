@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.MessageBean;
 
 @WebServlet(urlPatterns = { "/message", "/clear" })
 public class MessageServlet extends HttpServlet {
@@ -15,25 +16,28 @@ public class MessageServlet extends HttpServlet {
 		var session = request.getSession();
 
 		if (session.getAttribute("history") == null) {
-			session.setAttribute("history", new ArrayList<String>());
+			session.setAttribute("history", new ArrayList<MessageBean>());
 		}
 
 		var path = request.getServletPath();
 		if (path.equals("/clear")) {
-			var list = (ArrayList<String>) session.getAttribute("history");
+			var list = (ArrayList<MessageBean>) session.getAttribute("history");
 			list.clear();
 		}
 
 		request.getRequestDispatcher("/WEB-INF/message.jsp").forward(request, response);
 	}
 
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		var message = request.getParameter("message");
+		var mesBean = new MessageBean(request.getParameter("name"), request.getParameter("message"));
 		var session = request.getSession();
-		var list = (ArrayList<String>) session.getAttribute("history");
-		list.add(message);
+		var list = (ArrayList<MessageBean>) session.getAttribute("history");
+		list.add(mesBean);
 
 		request.getRequestDispatcher(
 				"/WEB-INF/message.jsp").forward(request, response);

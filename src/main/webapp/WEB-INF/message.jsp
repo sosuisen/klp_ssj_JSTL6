@@ -9,7 +9,8 @@
 </head>
 <body>
 	<form action="message" method="POST">
-		メッセージ入力 <input type="text" name="message">
+		投稿者名：<input type="text" name="name">
+		メッセージ：<input type="text" name="message">
 		<button>送信</button>
 	</form>
 	<form action="clear" method="GET">
@@ -19,7 +20,7 @@
 	<h1>メッセージ一覧</h1>
 	<br>
 	<c:forEach var="mes" items="${history}">
-${ mes }<br>
+${mes.name}:${mes.message}<br>
 	</c:forEach>
 </body>
 </html>
